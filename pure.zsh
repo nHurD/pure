@@ -121,6 +121,10 @@ prompt_pure_preprompt_render() {
 
 	# construct preprompt, beginning with path
 	local preprompt="%F{blue}%~%f"
+
+    # python info
+    preprompt+="$python_info[virtualenv]"
+
 	# git info
 	preprompt+="%F{$git_color}${vcs_info_msg_0_}${prompt_pure_git_dirty}%f"
 	# git pull/push arrows
@@ -209,6 +213,11 @@ prompt_pure_precmd() {
 
 	# preform async git dirty check and fetch
 	prompt_pure_async_tasks
+
+    # python information
+    if (( $+functions[python-info] )); then
+        python-info
+    fi
 
 	# print the preprompt
 	prompt_pure_preprompt_render "precmd"
@@ -417,6 +426,8 @@ prompt_pure_setup() {
 	# vcs_info_msg_1_ = 'x%R' git top level (%R), x-prefix prevents creation of a named path (AUTO_NAME_DIRS)
 	zstyle ':vcs_info:git*' formats ' %b' 'x%R'
 	zstyle ':vcs_info:git*' actionformats ' %b|%a' 'x%R'
+
+    zstyle ':prezto:module:python:info:virtualenv' format ' %F{222}py:%F{242}%v%f'
 
 	# if the user has not registered a custom zle widget for clear-screen,
 	# override the builtin one so that the preprompt is displayed correctly when
